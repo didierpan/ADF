@@ -1,0 +1,25 @@
+{
+	"name": "DS_ADSL_SOURCE_CopyDataTP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_CopyDataTP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "signal-ecogaz.csv",
+				"folderPath": "TP1",
+				"fileSystem": "input"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

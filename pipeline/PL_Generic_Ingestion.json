@@ -1,0 +1,89 @@
+{
+	"name": "PL_Generic_Ingestion",
+	"properties": {
+		"activities": [
+			{
+				"name": "CP_data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_ADLS_Dynamique",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_folder": "TP1",
+							"ds_filename": {
+								"value": "@pipeline().parameters.pl_target_file",
+								"type": "Expression"
+							},
+							"p_StorageContainer": "input"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_ADLS_Dynamique",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_folder": "DATA",
+							"ds_filename": {
+								"value": "@concat(formatDateTime(utcNow(), 'yyyy-MM-dd'),'_',pipeline().parameters.pl_target_file)",
+								"type": "Expression"
+							},
+							"p_StorageContainer": "output"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"pl_target_file": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-10-08T13:47:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

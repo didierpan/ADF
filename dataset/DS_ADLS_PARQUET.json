@@ -1,0 +1,54 @@
+{
+	"name": "DS_ADLS_PARQUET",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_CopyDataTP",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_FileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "INTENSITY"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().ds_FileName",
+					"type": "Expression"
+				},
+				"folderPath": "INTENSITE",
+				"fileSystem": "input"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "date_cet",
+				"type": "DATE"
+			},
+			{
+				"name": "heure_cet",
+				"type": "UTF8"
+			},
+			{
+				"name": "date_heure_utc",
+				"type": "TIMESTAMP_MILLIS"
+			},
+			{
+				"name": "intensite_emissions_conso",
+				"type": "INT64"
+			},
+			{
+				"name": "part_enr_conso",
+				"type": "INT64"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

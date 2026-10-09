@@ -1,0 +1,33 @@
+{
+	"name": "DS_REST_ODRE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_REST_ODRE",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"LS_BASE_URL": {
+					"value": "@dataset().DS_BASE_URL",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"DS_BASE_URL": {
+				"type": "string"
+			},
+			"DS_PATH_URL": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@dataset().DS_PATH_URL",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

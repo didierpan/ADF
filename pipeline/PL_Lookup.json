@@ -1,0 +1,174 @@
+{
+	"name": "PL_Lookup",
+	"properties": {
+		"activities": [
+			{
+				"name": "LK_GET_DATA",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_ADSL_SOURCE_CopyDataTP",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set DataList",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "LK_GET_DATA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "DataList",
+					"value": {
+						"value": "@activity('LK_GET_DATA').output.value",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "SetCount",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "LK_GET_DATA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Count",
+					"value": {
+						"value": "@activity('LK_GET_DATA').output.count",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "SetOutput",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "LK_GET_DATA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "output",
+					"value": {
+						"value": "@string(activity('LK_GET_DATA').output)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "FT_date",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Set DataList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LK_GET_DATA').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item()['Journée gazière'],'2022')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "FT_date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "items2022",
+					"value": {
+						"value": "@activity('FT_date').output.Value",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"DataList": {
+				"type": "Array"
+			},
+			"Count": {
+				"type": "Integer"
+			},
+			"Output": {
+				"type": "String"
+			},
+			"items2022": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-10-08T15:01:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

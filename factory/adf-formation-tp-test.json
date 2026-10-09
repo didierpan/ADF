@@ -1,0 +1,25 @@
+{
+	"name": "adf-formation-tp-test",
+	"properties": {
+		"globalParameters": {
+			"ODRE_API_URL": {
+				"type": "string",
+				"value": "https://odre.opendatasoft.com"
+			},
+			"ENV": {
+				"type": "string",
+				"value": "TEST"
+			}
+		},
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "cb026ad0-0a82-4172-ad6a-59b526087cfb",
+		"tenantId": "203c3afc-2874-4915-9563-d6699011d346"
+	}
+}

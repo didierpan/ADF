@@ -1,0 +1,77 @@
+{
+	"name": "DF_Clean_Ecogaz",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_CIBLECPData",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_CIBLECP_EcoGazAlertes",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Journée gazière} as string,",
+				"          {Couleur du signal (ENG)} as string,",
+				"          {Couleur du signal (FR)} as string,",
+				"          SourceFileName as string,",
+				"          {Indice de couleur} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 select(mapColumn(",
+				"          Date_Signal = {Journée gazière},",
+				"          CouleurEN = {Couleur du signal (ENG)},",
+				"          CouleurFR = {Couleur du signal (FR)},",
+				"          niveau = {Indice de couleur}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(Libelle_Couleur = iif(niveau=='1', 'Vert', iif(niveau=='2', 'Orange', 'Rouge')),",
+				"          Est_WeekEnd = dayOfWeek(toDate(Date_Signal)) == 1 || dayOfWeek(toDate(Date_Signal)) == 7) ~> derivedColumn1",
+				"derivedColumn1 filter(Libelle_Couleur=='Orange' || Libelle_Couleur=='Rouge') ~> filter1",
+				"filter1 aggregate(groupBy(Libelle_Couleur),",
+				"     Nombre_Alertes = count(Date_Signal)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

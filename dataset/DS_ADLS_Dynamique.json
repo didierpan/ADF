@@ -1,0 +1,45 @@
+{
+	"name": "DS_ADLS_Dynamique",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_CopyDataTP",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_folder": {
+				"type": "string"
+			},
+			"ds_filename": {
+				"type": "string"
+			},
+			"p_StorageContainer": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().ds_filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().ds_folder",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().p_StorageContainer",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

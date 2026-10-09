@@ -1,0 +1,19 @@
+{
+	"name": "LS_REST_ODRE",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"LS_BASE_URL": {
+				"type": "string",
+				"defaultValue": "https://odre.opendatasoft.com/api/explore/v2.1/"
+			}
+		},
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "@{linkedService().LS_BASE_URL}",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}

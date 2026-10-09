@@ -1,0 +1,17 @@
+{
+	"name": "DS_SQL_CIBLECP_EcoGazAlertes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_CopyDataTP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ECO_GAZ_ALERTES"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

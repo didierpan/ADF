@@ -1,0 +1,35 @@
+{
+	"name": "DS_ADLS_EXCEL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_CopyDataTP",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_FileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "INTENSITY"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().ds_FileName",
+					"type": "Expression"
+				},
+				"folderPath": "INTENSITE",
+				"fileSystem": "input"
+			},
+			"sheetIndex": 0,
+			"range": "",
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

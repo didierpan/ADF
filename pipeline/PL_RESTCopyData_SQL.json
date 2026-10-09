@@ -1,0 +1,183 @@
+{
+	"name": "PL_RESTCopyData_SQL",
+	"properties": {
+		"activities": [
+			{
+				"name": "CP_DataTP1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set_apiPath",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "Append variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": true,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "LS_ADLS_CopyDataTP",
+								"type": "LinkedServiceReference"
+							}
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Journée gazière",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Journée gazière",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Couleur du signal (ENG)",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Couleur du signal (ENG)",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Couleur du signal (FR)",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Couleur du signal (FR)",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SourceFileName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SourceFileName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Indice de couleur",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Indice de couleur",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_REST_ODRE",
+						"type": "DatasetReference",
+						"parameters": {
+							"DS_BASE_URL": {
+								"value": "@pipeline().globalParameters.ODRE_API_URL",
+								"type": "Expression"
+							},
+							"DS_PATH_URL": {
+								"value": "@first(variables('v_arrayVar'))",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_ADSL_TARGET_CopyData",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Set_apiPath",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_path",
+					"value": "/api/explore/v2.1/catalog/datasets/part-enr-intensite-ges-conso-tr/records?limit=20"
+				}
+			},
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_arrayVar",
+					"value": "/api/explore/v2.1/catalog/datasets/part-enr-intensite-ges-conso-tr/records?limit=20"
+				}
+			}
+		],
+		"variables": {
+			"v_path": {
+				"type": "String",
+				"defaultValue": "catalog/datasets/part-enr-intensite-ges-conso-tr/records?limit=20"
+			},
+			"v_arrayVar": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-10-08T10:35:06Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

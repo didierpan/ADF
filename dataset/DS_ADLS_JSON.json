@@ -1,0 +1,51 @@
+{
+	"name": "DS_ADLS_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_CopyDataTP",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_FileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "INTENSITY"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().ds_FileName",
+					"type": "Expression"
+				},
+				"folderPath": "INTENSITE",
+				"fileSystem": "input"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"date_cet": {
+					"type": "string"
+				},
+				"heure_cet": {
+					"type": "string"
+				},
+				"date_heure_utc": {
+					"type": "string"
+				},
+				"intensite_emissions_conso": {
+					"type": "integer"
+				},
+				"part_enr_conso": {
+					"type": "integer"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
